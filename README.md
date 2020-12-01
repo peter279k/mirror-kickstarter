@@ -2,7 +2,7 @@
 
 ## Setup
 
-- Prepare a VPS (virtual private server) and ensure the Ubuntu 18.04 or Ubuntu 20.04 has been installed.
+- Prepare a new VPS (virtual private server) and ensure the Ubuntu 18.04 or Ubuntu 20.04 has been installed.
 - Login to the mirror server.
 - Ensure the `git` command has been available.
 - Clone this repository with `git` command then run `cd mirror-kickstarter/`.
