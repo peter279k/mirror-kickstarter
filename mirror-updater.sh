@@ -14,8 +14,9 @@ echo -e "${green_color}Update composer/mirror repository form GitHub...${rest_co
 
 ${sudo_prefix}chown -R www-data:www-data /var/www/html/
 
-${sudo_prefix}su -p -l www-data -s /bin/bash -c "cd /var/www/html/mirror/ && git pull origin master --no-edit"
-${sudo_prefix}su -p -l www-data -s /bin/bash -c "cd /var/www/html/mirror/ && php composer.phar install"
+cd /var/www/html/mirror/
+git pull origin master --no-edit
+php composer.phar install -n
 
 echo "${yellow_color}Restarting worker...${rest_color}"
 ${sudo_prefix}systemctl restart supervisor

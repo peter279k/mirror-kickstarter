@@ -57,9 +57,11 @@ ${sudo_prefix}rm -rf /var/www/html/*
 ${sudo_prefix}rm -rf /var/www/html/.* 2> /dev/null
 
 ${sudo_prefix}chown -R www-data:www-data /var/www/html/
+${sudo_prefix}mv ./composer.phar /var/www/html/mirror/
 
-${sudo_prefix}su -p -l www-data -s /bin/bash -c "cd /var/www/html/ && git clone https://github.com/composer/mirror mirror && mv ${PWD}/composer.phar /var/www/html/mirror/"
-${sudo_prefix}su -p -l www-data -s /bin/bash -c "cd /var/www/html/mirror/ && php composer.phar install -n"
+cd /var/www/html/mirror/
+${sudo_prefix}git pull origin master --no-edit
+php composer.phar install -n
 
 echo -e "${green_color}More informations about Composer mirror setting, please refer the https://github.com/composer/mirror :-)${rest_color}"
 echo -e "${yellow_color}Or run mirror-installer.sh script!${rest_color}"
