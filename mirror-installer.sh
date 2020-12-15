@@ -12,12 +12,13 @@ if [ ${USER} != "root" ]; then
     sudo_prefix='sudo '
 fi;
 
-cd /var/www/html/mirror
-if [ ! -f mirror.config.php ]; then
-    echo -e "${red_color}Please create the mirror.config.php on /var/www/html folder manually!${rest_color}"
+if [ ! -f "${PWD}/mirror.config.php" ]; then
+    echo -e "${red_color}Please create the mirror.config.php on /var/www/html/mirror folder manually!${rest_color}"
     echo -e "${red_color}More details about mirror.config.php setting is avaialbe on https://github.com/composer/mirror#composer-repository-mirror${rest_color}"
     exit 1;
 fi;
+
+cp "${PWD}/mirror.config.php" /var/www/html/mirror/
 
 ${sudo_prefix}chown -R www-data:www-data /var/www/html/
 ${sudo_prefix}chmod -R ug+rwx /var/www/html/mirror/
