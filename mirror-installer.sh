@@ -1,7 +1,12 @@
 #!/bin/bash
 
-echo 'Please make sure the kickstarter.sh has been run!'
-echo 'Changing directory to /var/www/html...'
+green_color='\e[0;32m'
+yellow_color='\e[0;33m'
+red_color='\e[0;31m'
+rest_color='\e[0m'
+
+echo -e "${yellow_color}Please make sure the kickstarter.sh has been run!${rest_color}"
+echo -e "${green_color}Changing directory to /var/www/html...${rest_color}"
 
 if [ ${USER} != "root" ]; then
     sudo_prefix='sudo '
@@ -9,13 +14,13 @@ fi;
 
 cd /var/www/html/mirror
 if [ ! -f mirror.config.php ]; then
-    echo 'Please create the mirror.config.php on /var/www/html folder manually!'
-    echo 'More details about mirror.config.php setting is avaialbe on https://github.com/composer/mirror#composer-repository-mirror'
+    echo -e "${red_color}Please create the mirror.config.php on /var/www/html folder manually!${rest_color}"
+    echo -e "${red_color}More details about mirror.config.php setting is avaialbe on https://github.com/composer/mirror#composer-repository-mirror${rest_color}"
     exit 1;
 fi;
 
-echo 'Create a supervisor confiuration for mirrorv2....'
-supervisor_path='/etc/supervisor/conf.d/composer-mirror-v2.conf'
+echo -e "${green_color}Create a supervisor confiuration for mirrorv2....${rest_color}"
+supervisor_path="/etc/supervisor/conf.d/composer-mirror-v2.conf"
 ${sudo_prefix}touch ${supervisor_path}
 
 echo '[program:composer-mirror-v2]' | ${sudo_prefix}tee -a ${supervisor_path}
@@ -26,11 +31,11 @@ echo 'user=root' | ${sudo_prefix}tee -a ${supervisor_path}
 echo 'redirect_stderr=true' | ${sudo_prefix}tee -a ${supervisor_path}
 echo 'stdout_logfile=/var/log/composer-mirror-v2.log' | ${sudo_prefix}tee -a ${supervisor_path}
 
-echo 'Checking the has_v1_mirror is set for false on mirror.config.php...'
+echo -e "${green_color}Checking the has_v1_mirror is set for false on mirror.config.php...${rest_color}"
 has_v1_mirror=$(cat /var/www/repov2.packagist.tw/mirror.config.php | grep 'has_v1_mirror' | sed 's/[, ]//g' | awk '{split($1, a, "=>"); print a[2]}')
 
 if [ ${has_v1_mirror} == 'true' ]; then
-    echo 'Create a supervisor confiuration for mirrorv1....'
+    echo -e "${green_color}Create a supervisor confiuration for mirrorv1....${rest_color}"
     supervisor_path='/etc/supervisor/conf.d/composer-mirror-v1.conf'
     ${sudo_prefix}touch ${supervisor_path}
 
@@ -42,14 +47,16 @@ if [ ${has_v1_mirror} == 'true' ]; then
     echo 'redirect_stderr=true' | ${sudo_prefix}tee -a ${supervisor_path}
     echo 'stdout_logfile=/var/log/composer-mirror-v1.log' | ${sudo_prefix}tee -a ${supervisor_path}
 
-    echo 'Create a Cron job file for running "./mirror.php --gc" command once an hour...'
-    echo 'SHELL=/bin/sh' | ${sudo_prefix}tee -a ${supervisor_path}
-    echo 'PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin' | ${sudo_prefix}tee -a ${supervisor_path}
-    echo '*/60 * * * * root cd /var/www/html/mirror/ && php ./mirror.php --gc' | ${sudo_prefix}tee -a ${supervisor_path}
+    echo -e "${green_color}Create a composer-mirror Cron job file for running ./mirror.php --gc command once an hour...${rest_color}"
+
+    cronjob_path="/etc/cron.d/composer-mirror"
+    echo 'SHELL=/bin/bash' | ${sudo_prefix}tee ${cronjob_path}
+    echo 'PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin' | ${sudo_prefix}tee -a ${cronjob_path}
+    echo '*/60 * * * * root cd /var/www/html/mirror/ && php ./mirror.php --gc' | ${sudo_prefix}tee -a ${cronjob_path}
 fi;
 
-echo 'Restart supervisor service with systemctl...'
+echo -e "${green_color}Restart supervisor service with systemctl...${rest_color}"
 
 ${sudo_prefix}systemctl restart supervisor
 
-echo 'Mirror installer has been done!'
+echo -e "${green_color}Mirror installer has been done!${rest_color}"
