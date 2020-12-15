@@ -63,3 +63,15 @@ echo -e "${green_color}Restart supervisor service with systemctl...${rest_color}
 ${sudo_prefix}systemctl restart supervisor
 
 echo -e "${green_color}Mirror installer has been done!${rest_color}"
+
+echo "${green_color}Setting up the composer-mirror-updater Cronjob file...${rest_color}"
+echo "${green_color}Copying the mirror-updater.sh file to home root directory...${rest_color}"
+
+${sudo_prefix}cp ${PWD}/mirror-updater.sh /root/
+cronjob_path="/etc/cron.d/composer-mirror-updater"
+
+echo 'SHELL=/bin/bash' | ${sudo_prefix}tee ${cronjob_path}
+echo 'PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin' | ${sudo_prefix}tee -a ${cronjob_path}
+echo '*/60 * * * * root cd /root/ && ./mirror-updater.sh' | ${sudo_prefix}tee -a ${cronjob_path}
+
+echo -e "${green_color}Adding composer-mirror-updater Cronjob file has been done!${rest_color}"
