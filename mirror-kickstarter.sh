@@ -21,12 +21,12 @@ ${sudo_prefix}apt-get install -y software-properties-common
 echo -e "${green_color}Import fingerprint key for remote PHP mirror...${rest_color}"
 ${sudo_prefix}apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 14AA40EC0831756756D7F66C4F4EA0AAE5267A6C
 
-echo "deb http://ppa.launchpad.net/ondrej/php/ubuntu $(lsb_release -sc) main" | ${sudo_prefix}tee -a /etc/apt/sources.list
-echo "deb-src http://ppa.launchpad.net/ondrej/php/ubuntu $(lsb_release -sc) main" | ${sudo_prefix}tee -a /etc/apt/sources.list
+echo "deb http://ppa.launchpad.net/ondrej/php/ubuntu $(lsb_release -sc) main" | ${sudo_prefix}tee /etc/apt/sources.list.d/ondrej.list
+echo "deb-src http://ppa.launchpad.net/ondrej/php/ubuntu $(lsb_release -sc) main" | ${sudo_prefix}tee -a /etc/apt/sources.list.d/ondrej.list
 
 echo -e "${green_color}Import key for remote Nginx mirror...${rest_color}"
-echo "deb http://ppa.launchpad.net/ondrej/nginx/ubuntu $(lsb_release -sc) main" | ${sudo_prefix}tee -a /etc/apt/sources.list
-echo "deb-src http://ppa.launchpad.net/ondrej/nginx/ubuntu $(lsb_release -sc) main" | ${sudo_prefix}tee -a /etc/apt/sources.list
+echo "deb http://ppa.launchpad.net/ondrej/nginx/ubuntu $(lsb_release -sc) main" | ${sudo_prefix}tee -a /etc/apt/sources.list.d/ondrej.list
+echo "deb-src http://ppa.launchpad.net/ondrej/nginx/ubuntu $(lsb_release -sc) main" | ${sudo_prefix}tee -a /etc/apt/sources.list.d/ondrej.list
 
 echo -e "${green_color}Install required packages...${rest_color}"
 ${sudo_prefix}apt-get update
@@ -59,9 +59,9 @@ ${sudo_prefix}rm -rf /var/www/html/.* 2> /dev/null
 ${sudo_prefix}chown -R www-data:www-data /var/www/html/
 ${sudo_prefix}mv ./composer.phar /var/www/html/mirror/
 
-cd /var/www/html/mirror/
-${sudo_prefix}git pull origin master --no-edit
-php composer.phar install -n
+cd /var/www/html/
+${sudo_prefix}git clone https://github.com/composer/mirror mirror
+${sudo_prefix}php composer.phar install -n
 
 echo -e "${green_color}More informations about Composer mirror setting, please refer the https://github.com/composer/mirror :-)${rest_color}"
 echo -e "${yellow_color}Or run mirror-installer.sh script!${rest_color}"
