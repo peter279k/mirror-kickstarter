@@ -13,7 +13,7 @@ if [ ${USER} != "root" ]; then
 fi;
 
 if [ ! -f "${PWD}/mirror.config.php" ]; then
-    echo -e "${red_color}Please create the mirror.config.php on /var/www/html/mirror folder manually!${rest_color}"
+    echo -e "${red_color}Please create the mirror.config.php on ${PWD} directory manually!${rest_color}"
     echo -e "${red_color}More details about mirror.config.php setting is avaialbe on https://github.com/composer/mirror#composer-repository-mirror${rest_color}"
     exit 1;
 fi;
