@@ -49,7 +49,6 @@ ${sudo_prefix}systemctl enable --now supervisor
 
 echo -e "${green_color}Download Composer...${rest_color}"
 curl -sS https://getcomposer.org/installer | php
-${sudo_prefix}mv composer.phar /usr/local/bin/composer
 
 echo -e "${green_color}Copy Nginx configuration file...${rest_color}"
 ${sudo_prefix}cp ./nginx-default.conf /etc/nginx/sites-available/default
@@ -58,10 +57,9 @@ ${sudo_prefix}rm -rf /var/www/html/*
 ${sudo_prefix}rm -rf /var/www/html/.* 2> /dev/null
 
 ${sudo_prefix}chown -R www-data:www-data /var/www/html/
-${sudo_prefix}chmod -R ug+rwx /var/www/html/public/
 
-${sudo_prefix}su -p -l www-data -s /bin/bash -c "cd /var/www/html/ && git clone https://github.com/composer/mirror mirror"
-${sudo_prefix}su -p -l www-data -s /bin/bash -c "cd /var/www/html/mirror/ && composer install -n"
+${sudo_prefix}su -p -l www-data -s /bin/bash -c "cd /var/www/html/ && git clone https://github.com/composer/mirror mirror && mv ${PWD}/composer.phar /var/www/html/"
+${sudo_prefix}su -p -l www-data -s /bin/bash -c "cd /var/www/html/mirror/ && php composer.phar install -n"
 
 echo -e "${green_color}More informations about Composer mirror setting, please refer the https://github.com/composer/mirror :-)${rest_color}"
 echo -e "${yellow_color}Or run mirror-installer.sh script!${rest_color}"
