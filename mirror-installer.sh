@@ -36,9 +36,9 @@ echo 'redirect_stderr=true' | ${sudo_prefix}tee -a ${supervisor_path}
 echo 'stdout_logfile=/var/log/composer-mirror-v2.log' | ${sudo_prefix}tee -a ${supervisor_path}
 
 echo -e "${green_color}Checking the has_v1_mirror is set for false on mirror.config.php...${rest_color}"
-has_v1_mirror=$(cat /var/www/repov2.packagist.tw/mirror.config.php | grep 'has_v1_mirror' | sed 's/[, ]//g' | awk '{split($1, a, "=>"); print a[2]}')
+has_v1_mirror=$(cat /var/www/html/mirror/mirror.config.php | grep 'has_v1_mirror' | sed 's/[, ]//g' | awk '{split($1, a, "=>"); print a[2]}')
 
-if [ ${has_v1_mirror} == 'true' ]; then
+if [[ ${has_v1_mirror} == 'true' ]]; then
     echo -e "${green_color}Create a supervisor confiuration for mirrorv1....${rest_color}"
     supervisor_path='/etc/supervisor/conf.d/composer-mirror-v1.conf'
     ${sudo_prefix}touch ${supervisor_path}
@@ -65,8 +65,8 @@ ${sudo_prefix}systemctl restart supervisor
 
 echo -e "${green_color}Mirror installer has been done!${rest_color}"
 
-echo "${green_color}Setting up the composer-mirror-updater Cronjob file...${rest_color}"
-echo "${green_color}Copying the mirror-updater.sh file to home root directory...${rest_color}"
+echo -e "${green_color}Setting up the composer-mirror-updater Cronjob file...${rest_color}"
+echo -e "${green_color}Copying the mirror-updater.sh file to home root directory...${rest_color}"
 
 ${sudo_prefix}cp ${PWD}/mirror-updater.sh /root/
 cronjob_path="/etc/cron.d/composer-mirror-updater"
