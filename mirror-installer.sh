@@ -26,7 +26,7 @@ echo -e "${green_color}Create a supervisor confiuration for mirrorv2....${rest_c
 supervisor_path="/etc/supervisor/conf.d/composer-mirror-v2.conf"
 ${sudo_prefix}touch ${supervisor_path}
 
-echo '[program:composer-mirror-v2]' | ${sudo_prefix}tee -a ${supervisor_path}
+echo '[program:composer-mirror-v2]' | ${sudo_prefix}tee ${supervisor_path}
 echo 'command=php /var/www/html/mirror/mirror.php --v2' | ${sudo_prefix}tee -a ${supervisor_path}
 echo 'autostart=true' | ${sudo_prefix}tee -a ${supervisor_path}
 echo 'autorestart=true' | ${sudo_prefix}tee -a ${supervisor_path}
@@ -42,7 +42,7 @@ if [ ${has_v1_mirror} == 'true' ]; then
     supervisor_path='/etc/supervisor/conf.d/composer-mirror-v1.conf'
     ${sudo_prefix}touch ${supervisor_path}
 
-    echo '[program:composer-mirror-v1]' | ${sudo_prefix}tee -a ${supervisor_path}
+    echo '[program:composer-mirror-v1]' | ${sudo_prefix}tee ${supervisor_path}
     echo 'command=php /var/www/html/mirror/mirror.php --v1' | ${sudo_prefix}tee -a ${supervisor_path}
     echo 'autostart=true' | ${sudo_prefix}tee -a ${supervisor_path}
     echo 'autorestart=true' | ${sudo_prefix}tee -a ${supervisor_path}
