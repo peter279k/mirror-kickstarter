@@ -86,7 +86,7 @@ if [[ ${install_answer} == "Y" || ${install_answer} == "y" ]]; then
     exit 1;
   fi;
 
-  echo "00  23 * * *  certbot renew --dry-run" | ${sudo_prefix}tee -a /var/spool/cron/crontabs/root
+  echo "00  23 * * *  certbot renew --dry-run" | ${sudo_prefix}tee /var/spool/cron/crontabs/root
   ${sudo_prefix}chmod 0600 /var/spool/cron/crontabs/root
   ${sudo_prefix}systemctl restart cron
 

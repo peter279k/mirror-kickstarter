@@ -19,6 +19,9 @@ if [ ! -f mirror.config.php ]; then
     exit 1;
 fi;
 
+${sudo_prefix}chown -R www-data:www-data /var/www/html/
+${sudo_prefix}chmod -R ug+rwx /var/www/html/public/
+
 echo -e "${green_color}Create a supervisor confiuration for mirrorv2....${rest_color}"
 supervisor_path="/etc/supervisor/conf.d/composer-mirror-v2.conf"
 ${sudo_prefix}touch ${supervisor_path}

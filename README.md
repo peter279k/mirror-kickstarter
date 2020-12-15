@@ -6,9 +6,9 @@
 - Login to the mirror server.
 - Ensure the `git` command has been available.
 - Clone this repository with `git` command then run `cd mirror-kickstarter/`.
-- Run `./mirror-kickstarter.sh` shell script.
+- Run `./mirror-kickstarter.sh` shell script to setup the environment.
 - Create a `mirror.config.php` on `/var/www/html/mirror` folder.
-- Run `./mirror-installer.sh` shell script.
+- Run `./mirror-installer.sh` shell script to setup the Packagist mirror repository.
 
 ## Debugging and force-resync of v2 metadata
 
