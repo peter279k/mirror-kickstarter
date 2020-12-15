@@ -57,6 +57,9 @@ ${sudo_prefix}cp ./nginx-default.conf /etc/nginx/sites-available/default
 ${sudo_prefix}rm -rf /var/www/html/*
 ${sudo_prefix}rm -rf /var/www/html/.* 2> /dev/null
 
+${sudo_prefix}chown -R www-data:www-data /var/www/html/
+${sudo_prefix}chmod -R ug+rwx /var/www/html/public/
+
 ${sudo_prefix}su -p -l www-data -s /bin/bash -c "cd /var/www/html/ && git clone https://github.com/composer/mirror mirror"
 ${sudo_prefix}su -p -l www-data -s /bin/bash -c "cd /var/www/html/mirror/ && composer install -n"
 

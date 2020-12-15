@@ -12,6 +12,9 @@ echo -e "${green_color}Welcome to the kickstarter for Composer mirror updater!${
 
 echo -e "${green_color}Update composer/mirror repository form GitHub...${rest_color}"
 
+${sudo_prefix}chown -R www-data:www-data /var/www/html/
+${sudo_prefix}chmod -R ug+rwx /var/www/html/public/
+
 ${sudo_prefix}su -p -l www-data -s /bin/bash -c "cd /var/www/html/mirror/ && git pull origin master --no-edit"
 ${sudo_prefix}su -p -l www-data -s /bin/bash -c "cd /var/www/html/mirror/ && composer install"
 
