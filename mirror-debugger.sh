@@ -27,4 +27,4 @@ fi;
 echo -e "${green_color}Runnig the manual Composer mirror resyncer has been done...${rest_color}"
 
 echo -e "${green_color}Starting supervisor service with systemctl...${rest_color}"
-${sudo_prefix}systemctl sart supervisor
+${sudo_prefix}systemctl start supervisor
