@@ -1,4 +1,6 @@
 #!/bin/bash
+#Set install parameters values
+. ./.env
 
 green_color='\e[0;32m'
 red_color='\e[0;31m'
@@ -13,7 +15,7 @@ fi;
 echo -e "${green_color}Stopping supervisor service with systemctl...${rest_color}"
 ${sudo_prefix}systemctl stop supervisor
 
-cd /var/www/html/mirror
+cd $INSTALL_PREFIX/mirror
 echo 'Forcing recync the Composer mirrors...'
 
 ${sudo_prefix}./mirror.php --resync -v

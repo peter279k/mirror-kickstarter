@@ -1,4 +1,6 @@
 #!/bin/bash
+#Set install parameters values
+. ./.env
 
 green_color='\e[0;32m'
 yellow_color='\e[0;33m'
@@ -17,16 +19,6 @@ fi;
 
 ${sudo_prefix}apt-get update
 ${sudo_prefix}apt-get install -y software-properties-common
-
-echo -e "${green_color}Import fingerprint key for remote PHP mirror...${rest_color}"
-${sudo_prefix}apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 14AA40EC0831756756D7F66C4F4EA0AAE5267A6C
-
-echo "deb http://ppa.launchpad.net/ondrej/php/ubuntu $(lsb_release -sc) main" | ${sudo_prefix}tee /etc/apt/sources.list.d/ondrej.list
-echo "deb-src http://ppa.launchpad.net/ondrej/php/ubuntu $(lsb_release -sc) main" | ${sudo_prefix}tee -a /etc/apt/sources.list.d/ondrej.list
-
-echo -e "${green_color}Import key for remote Nginx mirror...${rest_color}"
-echo "deb http://ppa.launchpad.net/ondrej/nginx/ubuntu $(lsb_release -sc) main" | ${sudo_prefix}tee -a /etc/apt/sources.list.d/ondrej.list
-echo "deb-src http://ppa.launchpad.net/ondrej/nginx/ubuntu $(lsb_release -sc) main" | ${sudo_prefix}tee -a /etc/apt/sources.list.d/ondrej.list
 
 echo -e "${green_color}Install required packages...${rest_color}"
 ${sudo_prefix}apt-get update
@@ -50,18 +42,29 @@ ${sudo_prefix}systemctl enable --now supervisor
 echo -e "${green_color}Download Composer...${rest_color}"
 curl -sS https://getcomposer.org/installer | php
 
+nginx_root_dir=$(grep root ${PWD}/nginx-default.conf|cut -d" " -f2)
+nginx_root_dir=${nginx_root_dir::-1} #delete trailing ;
+if [[ ${nginx_root_dir} != $INSTALL_PREFIX ]]; then
+  echo -e "${red_color}Error between .env and ${PWD}/nginx-default.conf : INSTALL_PREFIX and NGINX root dir are different${rest_color}"
+  exit 1
+fi
+
 echo -e "${green_color}Copy Nginx configuration file...${rest_color}"
 ${sudo_prefix}cp ./nginx-default.conf /etc/nginx/sites-available/default
 
-${sudo_prefix}rm -rf /var/www/html/*
-${sudo_prefix}rm -rf /var/www/html/.* 2> /dev/null
+read -p "Do you want to purge $INSTALL_PREFIX folder ? [Y/n] " purge_answer
 
-${sudo_prefix}chown -R www-data:www-data /var/www/html/
+if [[ ${purge_answer} == "Y" || ${purge_answer} == "y" ]]; then
+  ${sudo_prefix}rm -rf $INSTALL_PREFIX/*
+  ${sudo_prefix}rm -rf $INSTALL_PREFIX/.* 2> /dev/null
+fi
+
+${sudo_prefix}chown -R www-data:www-data $INSTALL_PREFIX/
 composer_path="${PWD}/composer.phar"
 
-cd /var/www/html/
+cd $INSTALL_PREFIX/
 ${sudo_prefix}git clone https://github.com/composer/mirror mirror
-${sudo_prefix}mv ${composer_path} /var/www/html/mirror/
+${sudo_prefix}mv ${composer_path} $INSTALL_PREFIX/mirror/
 
 cd mirror/ && ${sudo_prefix}php composer.phar install -n
 
@@ -94,7 +97,7 @@ if [[ ${install_answer} == "Y" || ${install_answer} == "y" ]]; then
   echo "00  23 * * *  certbot renew --dry-run" | ${sudo_prefix}tee /var/spool/cron/crontabs/root
   ${sudo_prefix}chmod 0600 /var/spool/cron/crontabs/root
   ${sudo_prefix}systemctl restart cron
-
+ 
   ${sudo_prefix}ufw status | grep inactive
 
   if [[ $? != 0 ]]; then
