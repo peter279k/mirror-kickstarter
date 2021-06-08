@@ -1,4 +1,6 @@
 #!/bin/bash
+#Set install parameters values
+. ./.env
 
 green_color='\e[0;32m'
 yellow_color='\e[0;33m'
@@ -12,9 +14,9 @@ echo -e "${green_color}Welcome to the kickstarter for Composer mirror updater!${
 
 echo -e "${green_color}Update composer/mirror repository form GitHub...${rest_color}"
 
-${sudo_prefix}chown -R www-data:www-data /var/www/html/
+${sudo_prefix}chown -R www-data:www-data $INSTALL_PREFIX/
 
-cd /var/www/html/mirror/
+cd $INSTALL_PREFIX/mirror/
 git pull origin master --no-edit
 php composer.phar install -n
 
