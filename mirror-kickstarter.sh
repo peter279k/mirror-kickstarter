@@ -54,7 +54,7 @@ ${sudo_prefix}cp ./nginx-default.conf /etc/nginx/sites-available/default
 
 read -p "Do you want to purge $INSTALL_PREFIX folder ? [Y/n] " purge_answer
 
-if [[ ${purge_answer} == "Y" || ${install_answer} == "y" ]]; then
+if [[ ${purge_answer} == "Y" || ${purge_answer} == "y" ]]; then
   ${sudo_prefix}rm -rf $INSTALL_PREFIX/*
   ${sudo_prefix}rm -rf $INSTALL_PREFIX/.* 2> /dev/null
 fi
